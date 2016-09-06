@@ -27,8 +27,7 @@ RUN apk --update add --virtual builddeps \
     python \
   # Install OpenTSDB and scripts
  && curl -k -L -s -o - https://github.com/OpenTSDB/opentsdb/archive/v${TSDB_VERSION}.tar.gz | tar xzf - \
- && cd /opt/opentsdb/opentsdb-${TSDB_VERSION} \
- && ./build.sh \
+ && /opt/opentsdb/opentsdb-${TSDB_VERSION}/build.sh \
   # because of issue https://github.com/OpenTSDB/opentsdb/issues/707
   # commented lines do not work. These can be uncommeted when version of
   # tsdb is bumped. Entrypoint will have to be updated too.
