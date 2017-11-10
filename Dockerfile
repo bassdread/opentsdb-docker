@@ -1,4 +1,4 @@
-FROM janeczku/alpine-kubernetes:3.2
+FROM alpine:3.4
 
 RUN apk --update add \
     rsyslog \
@@ -9,7 +9,8 @@ RUN apk --update add \
   && : adding gnuplot for graphing \
   && apk add gnuplot \
     --update-cache \
-    --repository http://mirror.leaseweb.com/alpine/edge/community/
+    --repository http://dl-3.alpinelinux.org/alpine/v3.0/testing
+
 
 ENV TSDB_VERSION 2.3.0
 ENV HBASE_VERSION 1.2.1
@@ -57,9 +58,8 @@ RUN for i in /opt/bin/start_hbase.sh /opt/bin/start_opentsdb.sh /opt/bin/create_
         sed -i "s#::JAVA_HOME::#$JAVA_HOME#g; s#::PATH::#$PATH#g; s#::TSDB_VERSION::#$TSDB_VERSION#g;" $i; \
     done
 
-RUN mkdir -p /etc/services.d/hbase /etc/services.d/tsdb
-RUN ln -s /opt/bin/start_hbase.sh /etc/services.d/hbase/run
-RUN ln -s /opt/bin/start_opentsdb.sh /etc/services.d/tsdb/run
+ADD docker/start.sh /opt/bin/
+ENTRYPOINT ["/opt/bin/start.sh"]
 
 EXPOSE 60000 60010 60030 4242 16010
 
